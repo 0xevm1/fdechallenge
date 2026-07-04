@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-bricolage);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* Nimbus Gear palette — alpine light */
+  --color-fog: #f2f5f3; /* page base, cool green-white */
+  --color-spruce: #17312a; /* ink */
+  --color-pine: #1e5c48; /* primary */
+  --color-pine-deep: #164636; /* primary hover / footer */
+  --color-signal: #e8622c; /* gear orange, used sparingly */
+  --color-glacier: #dce9e3; /* tinted panels */
+  --color-mist: #e6edea; /* borders, soft fills */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-fog);
+  color: var(--color-spruce);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
