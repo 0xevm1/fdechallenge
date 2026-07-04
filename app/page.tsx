@@ -54,7 +54,7 @@ const products = [
 
 const promises = [
   { label: "Free shipping", detail: "on orders over $75" },
-  { label: "60-day returns", detail: "trail-tested or not" },
+  { label: "30-day returns", detail: "trail-tested or not" },
   { label: "2-year warranty", detail: "on all electronics" },
   { label: "Live order help", detail: "chat, bottom right" },
 ];
@@ -179,7 +179,7 @@ export default function Home() {
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-spruce/75">
               Packs, lights, and navigation electronics, trail-tested in the
-              Cascades. Free shipping over $75 and 60-day returns on
+              Cascades. Free shipping over $75 and 30-day returns on
               everything we make.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">

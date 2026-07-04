@@ -20,7 +20,7 @@ const bricolage = Bricolage_Grotesque({
 export const metadata: Metadata = {
   title: "Nimbus Gear — Outdoor gear, engineered for weather",
   description:
-    "Trail-tested packs, lights, and navigation electronics from Nimbus Gear. Free shipping over $75, 60-day returns, and live order help from the Nimbus assistant.",
+    "Trail-tested packs, lights, and navigation electronics from Nimbus Gear. Free shipping over $75, 30-day returns, and live order help from the Nimbus assistant.",
 };
 
 export default function RootLayout({
