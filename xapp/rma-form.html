@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nimbus Gear — Start a return</title>
+  <style>
+    /* ------------------------------------------------------------------
+       Nimbus Gear return form — all styles inline, no external assets.
+       Designed for the Cognigy Webchat v3 overlay (~360px wide).
+       ------------------------------------------------------------------ */
+    :root {
+      --mist: #eef2f6;        /* page background */
+      --card: #ffffff;        /* card surface */
+      --ink: #22303f;         /* primary text */
+      --storm: #5a6b7b;       /* secondary text */
+      --hairline: #d7dfe7;    /* borders */
+      --horizon: #2d5f8f;     /* selection blue */
+      --horizon-tint: #eaf1f8;/* selected card fill */
+      --signal: #e8622c;      /* CTA orange */
+      --signal-press: #c94f1e;
+      --ok: #2e7d4f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { background: var(--mist); }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      padding: 16px 14px 24px;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    /* Header / wordmark */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 16px;
+    }
+    header svg { flex: none; display: block; }
+    .wordmark {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-size: 12px;
+      color: var(--storm);
+      margin-top: 1px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .lede {
+      color: var(--storm);
+      font-size: 13.5px;
+      margin-bottom: 18px;
+    }
+
+    /* Step labels */
+    .step {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--storm);
+      margin: 18px 0 8px;
+    }
+    .step::after {
+      content: "";
+      flex: 1;
+      border-top: 1px solid var(--hairline);
+      transform: translateY(-3px);
+    }
+
+    /* Product cards — packing-slip line items */
+    #product-list { display: grid; gap: 8px; }
+
+    .product {
+      position: relative;
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 12px 12px 10px 40px;
+      cursor: pointer;
+      transition: border-color 120ms ease, background 120ms ease,
+        box-shadow 120ms ease;
+    }
+    .product input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+    /* custom radio indicator */
+    .product .dot {
+      position: absolute;
+      left: 13px;
+      top: 14px;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--hairline);
+      border-radius: 50%;
+      background: var(--card);
+      transition: border-color 120ms ease;
+    }
+    .product:hover { border-color: var(--horizon); }
+    .product.selected {
+      border-color: var(--horizon);
+      background: var(--horizon-tint);
+      box-shadow: 0 0 0 1px var(--horizon);
+    }
+    .product.selected .dot {
+      border-color: var(--horizon);
+      background: radial-gradient(circle, var(--horizon) 0 4px, var(--card) 4.5px);
+    }
+    .product:focus-within {
+      outline: 2px solid var(--horizon);
+      outline-offset: 2px;
+    }
+
+    .product .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .product .name { font-weight: 600; font-size: 14.5px; }
+    .product .price { font-size: 14px; white-space: nowrap; }
+    .product .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 5px;
+      padding-top: 5px;
+      border-top: 1px dashed var(--hairline);
+      font-size: 12px;
+      color: var(--storm);
+    }
+
+    .empty {
+      background: var(--card);
+      border: 1px dashed var(--hairline);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 13.5px;
+      color: var(--storm);
+      text-align: center;
+    }
+
+    /* Reason + comment */
+    label.field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 12px 0 5px;
+    }
+    label.field-label .optional {
+      font-weight: 400;
+      color: var(--storm);
+    }
+    select, textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235a6b7b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    select:focus, textarea:focus {
+      outline: 2px solid var(--horizon);
+      outline-offset: 1px;
+      border-color: var(--horizon);
+    }
+
+    /* Submit */
+    button#submit-btn {
+      width: 100%;
+      margin-top: 18px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: var(--signal);
+      border: none;
+      border-radius: 10px;
+      padding: 13px 16px;
+      cursor: pointer;
+      transition: background 120ms ease;
+    }
+    button#submit-btn:hover:not(:disabled) { background: var(--signal-press); }
+    button#submit-btn:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+    button#submit-btn:disabled {
+      background: var(--hairline);
+      color: var(--storm);
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 10px;
+      font-size: 13px;
+      text-align: center;
+      color: var(--storm);
+      min-height: 1.2em;
+    }
+    #status.ok { color: var(--ok); font-weight: 600; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Cloud-over-peak mark -->
+    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+      <path d="M4 24 L12 10 L17 18 L20 13 L26 24 Z" fill="#2d5f8f" />
+      <path d="M8.5 9.5a4.5 4.5 0 0 1 8.6-1.6 3.5 3.5 0 0 1 4.4 3.1H8.6a4.6 4.6 0 0 1-.1-1.5Z" fill="#8fb0cc" />
+    </svg>
+    <div>
+      <div class="wordmark">Nimbus Gear</div>
+      <div class="tagline">Returns &amp; exchanges</div>
+    </div>
+  </header>
+
+  <h1>Start a return</h1>
+  <p class="lede">Pick the item you want to send back and tell us why. We'll take it from there in the chat.</p>
+
+  <div class="step"><span>Step 1 · Select item</span></div>
+  <div id="product-list" role="radiogroup" aria-label="Items from your order"></div>
+
+  <div class="step"><span>Step 2 · Reason</span></div>
+  <label class="field-label" for="reason">Reason for return</label>
+  <select id="reason">
+    <option value="" selected>Choose a reason…</option>
+    <option value="Defective">Defective</option>
+    <option value="Wrong item">Wrong item</option>
+    <option value="No longer needed">No longer needed</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label class="field-label" for="comment">Comments <span class="optional">(optional)</span></label>
+  <textarea id="comment" maxlength="500" placeholder="Anything else we should know?"></textarea>
+
+  <button id="submit-btn" type="button" disabled>Submit return request</button>
+  <p id="status" role="status"></p>
+
+  <!-- Cognigy xApp SDK (auto-hosted by Cognigy relative to the xApp page) -->
+  <script src="/sdk/app-page-sdk.js"></script>
+  <script>
+    // Injected by Cognigy from the Flow context (cc = context).
+    // Expected shape: [{ id, sku, name, price, qty, date }, ...]
+    const products = {{JSON.stringify(cc.products)}};
+
+    const listEl = document.getElementById("product-list");
+    const reasonEl = document.getElementById("reason");
+    const commentEl = document.getElementById("comment");
+    const submitEl = document.getElementById("submit-btn");
+    const statusEl = document.getElementById("status");
+
+    let selectedProduct = null;
+    let submitted = false;
+
+    function formatPrice(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? "$" + n.toFixed(2) : String(value ?? "");
+    }
+
+    function updateSubmitState() {
+      submitEl.disabled = submitted || !selectedProduct || !reasonEl.value;
+    }
+
+    function selectProduct(product, cardEl) {
+      selectedProduct = product;
+      listEl.querySelectorAll(".product").forEach(function (el) {
+        el.classList.toggle("selected", el === cardEl);
+      });
+      updateSubmitState();
+    }
+
+    function renderProducts() {
+      if (!Array.isArray(products) || products.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent =
+          "We couldn't find any returnable items on your recent order. Close this window to continue in the chat.";
+        listEl.appendChild(empty);
+        return;
+      }
+
+      products.forEach(function (p, i) {
+        const card = document.createElement("label");
+        card.className = "product";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "product";
+        radio.value = String(p.id);
+        radio.addEventListener("change", function () {
+          selectProduct(p, card);
+        });
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        dot.setAttribute("aria-hidden", "true");
+
+        const row = document.createElement("div");
+        row.className = "row";
+        const name = document.createElement("span");
+        name.className = "name";
+        name.textContent = p.name;
+        const price = document.createElement("span");
+        price.className = "price mono";
+        price.textContent = formatPrice(p.price);
+        row.appendChild(name);
+        row.appendChild(price);
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        const sku = document.createElement("span");
+        sku.className = "mono";
+        sku.textContent = p.sku + " · Qty " + (p.qty != null ? p.qty : 1);
+        const date = document.createElement("span");
+        date.textContent = p.date ? "Ordered " + p.date : "";
+        meta.appendChild(sku);
+        meta.appendChild(date);
+
+        card.appendChild(radio);
+        card.appendChild(dot);
+        card.appendChild(row);
+        card.appendChild(meta);
+        listEl.appendChild(card);
+      });
+    }
+
+    reasonEl.addEventListener("change", updateSubmitState);
+
+    submitEl.addEventListener("click", function () {
+      if (!selectedProduct || !reasonEl.value || submitted) return;
+
+      const payload = {
+        productId: selectedProduct.id,
+        sku: selectedProduct.sku,
+        name: selectedProduct.name,
+        reason: reasonEl.value,
+        comment: commentEl.value.trim(),
+      };
+
+      // Guard for preview / local testing where the Cognigy SDK isn't loaded.
+      if (typeof SDK !== "undefined" && typeof SDK.submit === "function") {
+        SDK.submit(payload);
+      } else {
+        console.log("[rma-form] SDK not available (preview mode). Payload:", payload);
+      }
+
+      submitted = true;
+      updateSubmitState();
+      statusEl.textContent = "Return request sent — back to the chat.";
+      statusEl.classList.add("ok");
+    });
+
+    renderProducts();
+  </script>
+</body>
+</html>
