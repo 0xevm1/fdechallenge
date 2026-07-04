@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nimbus Gear — Cognigy FDE Challenge Demo
+
+Demo app for the Cognigy FDE candidate challenge: a branded storefront with an
+embedded Cognigy Webchat v3 agent, the RMA xApp form, an Airtable-backed order
+API, and the FAQ knowledge source. See [PLAN.md](PLAN.md) for the full
+implementation plan and [DEMO-SCRIPT.md](DEMO-SCRIPT.md) for the presentation
+script.
+
+Built with [Next.js](https://nextjs.org) 16 (TypeScript, App Router, Tailwind)
+on the [Bun](https://bun.sh) runtime.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
+bun run dev        # dev server via `bun --bun next dev`
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) for the storefront and
+[http://localhost:3000/xapp-preview](http://localhost:3000/xapp-preview) for
+the RMA xApp preview.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun run build      # production build
+bun run start      # serve the production build
+bun run lint       # eslint
+bun run seed       # seed the Airtable base (needs env vars)
+```
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+Copy `.env.example` to `.env.local`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `NEXT_PUBLIC_COGNIGY_WEBCHAT_CONFIG_URL` — Cognigy Webchat v3 endpoint config URL
+- `AIRTABLE_PAT` / `AIRTABLE_BASE_ID` — for the order/RMA API routes and seed script
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project layout
+
+- `app/` — storefront, `/xapp-preview`, API routes (`/api/orders`, `/api/rmas`)
+- `components/CognigyWebchat.tsx` — Webchat v3 embed
+- `xapp/rma-form.html` — source of truth for the Cognigy "xApp: Show HTML" node
+- `knowledge/faqs.ctxt` — Knowledge AI FAQ source (CTXT)
+- `airtable/schema.md` — Airtable base schema + Cognigy call patterns
+- `scripts/seed-airtable.ts` — seed data (run with Bun)
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Import the repo in Vercel (Bun is auto-detected via `bun.lock`), set the three
+env vars above, and deploy. The production URL is the CX demo surface; the
+`/api/*` routes double as the third-party proxy for Cognigy's HTTP Request
+node.
