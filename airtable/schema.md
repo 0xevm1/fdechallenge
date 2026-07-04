@@ -106,7 +106,7 @@ contain the PAT.
 ## Seeding
 
 ```bash
-npm run seed          # or: npx tsx scripts/seed-airtable.ts
+bun run seed          # or: bun scripts/seed-airtable.ts
 ```
 
 The tables must already exist with the fields above. The script **appends**

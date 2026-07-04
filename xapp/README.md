@@ -52,7 +52,7 @@ creates the RMA record in Airtable, then return the RMA number via
 
 ## Local preview
 
-Run `npm run dev` and open [http://localhost:3000/xapp-preview](http://localhost:3000/xapp-preview).
+Run `bun run dev` and open [http://localhost:3000/xapp-preview](http://localhost:3000/xapp-preview).
 The route renders this exact HTML in a 360px sandboxed iframe with mock
 products and a stubbed SDK that displays the submitted payload on screen —
 no Cognigy session needed. If the form is opened outside Cognigy without the

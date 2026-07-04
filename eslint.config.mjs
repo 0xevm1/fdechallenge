@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent worktrees (contain their own full checkouts + build output).
+    ".claude/**",
   ]),
 ]);
 
